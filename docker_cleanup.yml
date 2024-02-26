@@ -2,6 +2,14 @@
 - name: Stop and remove Docker containers
   hosts: all
   tasks:
+    - name: Updating apt
+      apt:
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
     - name: Stop running containers
       shell: docker stop $(docker ps -q)
       become: yes
