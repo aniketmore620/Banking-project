@@ -11,6 +11,8 @@
       apt:
         name: docker.io
         state: present
+    - name: run container
+      command: docker run -itd -p 8084:8081 moreaniket/banking:latest
     - name: Stop running containers
       shell: docker stop $(docker ps -q)
       become: yes
