@@ -1,6 +1,7 @@
 ---
 - name: Stop and remove Docker containers
   hosts: all
+  become: yes
   tasks:
     - name: Updating apt
       apt:
