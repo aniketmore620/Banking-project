@@ -1,0 +1,39 @@
+- name: Configure Docker on EC2 Instances
+  hosts: all
+  become: true
+  tasks:
+    - name: Updating apt
+      apt:
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Start Docker Service
+      service:
+        name: docker
+        state: started
+
+    - name: Install pip3
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install Docker SDK for Python
+      pip:
+        name: docker
+        executable: pip3
+        state: present
+
+    - name: Pull Latest Docker Image from DockerHub
+      command: docker pull moreaniket/banking:latest
+
+    - name: Deploy Docker Container
+      docker_container:
+        name: banking_container
+        image: "moreaniket/banking:latest"
+        ports:
+          - "8084:8081"
+        state: started
