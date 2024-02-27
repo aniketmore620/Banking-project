@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('checkout') {
+            steps {
+                git credentialsId: 'github', url: 'https://github.com/aniketmore620/Banking-project.git'
+                }
+            }
+        stage('Removing Docker images & container') {
+            steps {
+                ansiblePlaybook credentialsId: 'prod-server',
+                                disableHostKeyChecking: true,
+                                installation: 'ansible',
+                                inventory: 'prod-inventory.inv',
+                                playbook: 'docker_cleanup.yml',
+                                vaultTmpPath: ''
+            }
+        }
+         stage('Deploy on Prod-server') {
+            steps {
+                ansiblePlaybook credentialsId: 'prod-server',
+                                disableHostKeyChecking: true,
+                                installation: 'ansible',
+                                inventory: 'prod-inventory.inv',
+                                playbook: 'prod-playbook.yml',
+                                vaultTmpPath: ''
+    }
+}
+}
+}
